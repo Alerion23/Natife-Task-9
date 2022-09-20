@@ -1,4 +1,4 @@
-package com.example.natifetask9.ui.auth
+package com.example.natifetask9.ui.fragments.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +12,7 @@ class AuthViewModel(
 
 
     fun connectToServer() {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.connectToServer()
         }
     }

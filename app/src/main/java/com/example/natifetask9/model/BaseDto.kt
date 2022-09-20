@@ -1,4 +1,4 @@
-package model
+package com.example.natifetask9.model
 
 data class BaseDto(val action: Action, val payload: String) {
 

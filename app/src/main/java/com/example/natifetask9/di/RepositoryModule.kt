@@ -7,7 +7,7 @@ import org.koin.dsl.module
 val repositoryModule = module {
 
     factory<AuthRepository> {
-        AuthRepositoryImpl(server = get())
+        AuthRepositoryImpl(client = get())
     }
 
 }
