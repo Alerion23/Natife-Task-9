@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Natife Task 9</string>
+    <string name="username">Username</string>
+    <string name="welcome_to_chat">WELCOME TO CHAT</string>
 </resources>
