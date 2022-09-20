@@ -1,32 +1,36 @@
 package com.example.natifetask9.server
 
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
-import java.io.PrintWriter
-import java.net.Socket
+import java.io.IOException
+import java.net.*
 
 class MessengerClient {
 
-    private var clientSocket: Socket? = null
-    private var reader: BufferedReader? = null
-    private var writer: PrintWriter? = null
+    private var serverSocket: DatagramSocket? = null
 
-    fun startConnection(ip: String, port: Int) {
-        clientSocket = Socket(ip, port)
-        reader = BufferedReader(InputStreamReader(clientSocket?.getInputStream()))
-        writer = PrintWriter(OutputStreamWriter(clientSocket?.getOutputStream()))
+    fun startConnection(port: Int) {
+        try {
+            serverSocket = DatagramSocket()
+            serverSocket?.soTimeout = 10000
+            while (true) {
+                val message = ByteArray(1024)
+                val packet = DatagramPacket(
+                    message, message.size, InetAddress.getByName("255.255.255.255"), port
+                )
+                serverSocket?.send(packet)
+                val quote = ByteArray(1024)
+                val responsePacket = DatagramPacket(quote, quote.size)
+                serverSocket?.receive(responsePacket)
+            }
+        } catch (e: SocketTimeoutException) {
+            e.printStackTrace()
+        } catch (e: SocketException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 
-    fun sendMessage(msg: String): String? {
-        writer?.println(msg)
-        return reader?.readLine()
+    fun stop() {
+        serverSocket?.close()
     }
-
-    fun stopConnection() {
-        reader?.close()
-        writer?.close()
-        clientSocket?.close()
-    }
-
 }

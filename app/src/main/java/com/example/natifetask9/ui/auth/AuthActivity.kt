@@ -2,7 +2,6 @@ package com.example.natifetask9.ui.auth
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.natifetask9.R
 import com.example.natifetask9.databinding.ActivityAuthBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
