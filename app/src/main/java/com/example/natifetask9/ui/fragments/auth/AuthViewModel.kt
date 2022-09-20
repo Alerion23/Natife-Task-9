@@ -10,10 +10,9 @@ class AuthViewModel(
     private val repository: AuthRepository
 ) : ViewModel() {
 
-
-    fun connectToServer() {
+    fun connectToServer(userName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.connectToServer()
+            repository.connectToServer(userName)
         }
     }
 
