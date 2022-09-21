@@ -2,6 +2,7 @@ package com.example.natifetask9.ui.fragments.auth
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.natifetask9.R
 import com.example.natifetask9.databinding.AuthFragmentBinding
@@ -19,8 +20,16 @@ class AuthFragment : Fragment(R.layout.auth_fragment) {
     }
 
     private fun onStartClick() {
-        binding?.startButton?.setOnClickListener {
-            viewModel.connectToServer()
+        binding?.apply {
+            startButton.setOnClickListener {
+                if (typeUsername.text.isNotEmpty()) {
+                    val userName = typeUsername.text.toString()
+                    viewModel.connectToServer(userName)
+                } else {
+                    Toast.makeText(context, getString(R.string.type_your_name), Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
         }
     }
 }

@@ -3,17 +3,16 @@ package com.example.natifetask9.server
 import java.io.IOException
 import java.net.*
 
-class MessengerClientImpl : MessengerClient {
+class UDPClientImpl : UDPClient {
 
     private var serverSocket: DatagramSocket? = null
-    private var response = 0
-    private var serverAddress : InetAddress? = null
+    private var serverAddress: InetAddress? = null
 
-    override fun startConnection(port: Int) {
-        while (response <= 0) {
+    override fun getIpAddress(port: Int): InetAddress? {
+        while (serverAddress == null) {
             try {
                 serverSocket = DatagramSocket()
-                serverSocket?.soTimeout = 10000
+                serverSocket?.soTimeout = 3000
                 val message = ByteArray(1024)
                 val packet = DatagramPacket(
                     message, message.size, InetAddress.getByName("255.255.255.255"), port
@@ -22,7 +21,6 @@ class MessengerClientImpl : MessengerClient {
                 val quote = ByteArray(1024)
                 val responsePacket = DatagramPacket(quote, quote.size)
                 serverSocket?.receive(responsePacket)
-                response = responsePacket.length
                 serverAddress = responsePacket.address
             } catch (e: SocketTimeoutException) {
                 e.printStackTrace()
@@ -32,9 +30,7 @@ class MessengerClientImpl : MessengerClient {
                 e.printStackTrace()
             }
         }
-    }
-
-    override fun stop() {
         serverSocket?.close()
+        return serverAddress
     }
 }
