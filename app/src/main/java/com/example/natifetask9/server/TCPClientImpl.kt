@@ -26,9 +26,8 @@ class TCPClientImpl : TCPClient {
         writer = PrintWriter(OutputStreamWriter(socket?.getOutputStream()))
         reader = BufferedReader(InputStreamReader(socket?.getInputStream()))
         isConnected.tryEmit(true)
-        val connection = isConnected.value
         val gson = Gson()
-        while (connection) {
+        while (isConnected.value) {
             try {
                 response = reader?.readLine()
                 if (response != null) {
