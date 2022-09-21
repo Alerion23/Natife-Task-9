@@ -8,7 +8,7 @@ class UDPClientImpl : UDPClient {
     private var serverSocket: DatagramSocket? = null
     private var serverAddress: InetAddress? = null
 
-    override fun start(port: Int): InetAddress? {
+    override fun getIpAddress(port: Int): InetAddress? {
         while (serverAddress == null) {
             try {
                 serverSocket = DatagramSocket()

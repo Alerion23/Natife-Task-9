@@ -6,7 +6,7 @@ interface TCPClient {
 
     fun startConnection(ip: InetAddress, port: Int, userName: String)
 
-    fun sendMessage(message: String): String?
+    fun sendMessage(message: String)
 
     fun stop()
 

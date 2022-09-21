@@ -10,7 +10,7 @@ class AuthRepositoryImpl(
 ) : AuthRepository {
 
     override suspend fun connectToServer(userName: String) {
-        val ipAddress = udpClient.start(Constants.UDP_PORT)
+        val ipAddress = udpClient.getIpAddress(Constants.UDP_PORT)
         if (ipAddress != null) {
             tcpClient.startConnection(ipAddress, Constants.TCP_PORT, userName)
         }

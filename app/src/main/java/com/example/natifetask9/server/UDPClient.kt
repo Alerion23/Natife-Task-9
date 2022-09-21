@@ -4,6 +4,6 @@ import java.net.InetAddress
 
 interface UDPClient {
 
-    fun start(port: Int) : InetAddress?
+    fun getIpAddress(port: Int) : InetAddress?
 
 }
