@@ -1,6 +1,5 @@
 package com.example.natifetask9.server
 
-import android.util.Log
 import com.example.natifetask9.model.BaseDto
 import com.example.natifetask9.model.ConnectDto
 import com.example.natifetask9.model.ConnectedDto
@@ -13,20 +12,20 @@ import java.lang.Exception
 import java.net.InetAddress
 import java.net.Socket
 
-class TCPClientImpl() : TCPClient {
+class TCPClientImpl : TCPClient {
 
     private var socket: Socket? = null
     private var writer: PrintWriter? = null
     private var reader: BufferedReader? = null
-    private var response: String? = null
 
     override fun startConnection(ip: InetAddress, port: Int, userName: String) {
+        var response : String? = null
         val gson = Gson()
-        try {
-            socket = Socket(ip, port)
-            writer = PrintWriter(OutputStreamWriter(socket?.getOutputStream()))
-            reader = BufferedReader(InputStreamReader(socket?.getInputStream()))
-            while (response != null) {
+        while (response == null) {
+            try {
+                socket = Socket(ip, port)
+                writer = PrintWriter(OutputStreamWriter(socket?.getOutputStream()))
+                reader = BufferedReader(InputStreamReader(socket?.getInputStream()))
                 response = reader?.readLine()
                 val responseModel = gson.fromJson(response, BaseDto::class.java)
                 if (responseModel.action == BaseDto.Action.CONNECTED) {
@@ -36,13 +35,12 @@ class TCPClientImpl() : TCPClient {
                     val jsonString = gson.toJson(ConnectDto(userId, userName))
                     val finalJsonString = gson.toJson(BaseDto(BaseDto.Action.CONNECT, jsonString))
                     writer?.println(finalJsonString)
+                    writer?.flush()
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
-
     }
 
     override fun sendMessage(message: String): String? {

@@ -26,7 +26,7 @@ class AuthFragment : Fragment(R.layout.auth_fragment) {
                     val userName = typeUsername.text.toString()
                     viewModel.connectToServer(userName)
                 } else {
-                    Toast.makeText(context, "Please type your user name", Toast.LENGTH_SHORT)
+                    Toast.makeText(context, getString(R.string.type_your_name), Toast.LENGTH_SHORT)
                         .show()
                 }
             }

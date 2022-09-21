@@ -8,11 +8,11 @@ class UDPClientImpl : UDPClient {
     private var serverSocket: DatagramSocket? = null
     private var serverAddress: InetAddress? = null
 
-    override fun start(port: Int) {
-        while (serverAddress != null) {
+    override fun start(port: Int): InetAddress? {
+        while (serverAddress == null) {
             try {
                 serverSocket = DatagramSocket()
-                serverSocket?.soTimeout = 10000
+                serverSocket?.soTimeout = 3000
                 val message = ByteArray(1024)
                 val packet = DatagramPacket(
                     message, message.size, InetAddress.getByName("255.255.255.255"), port
@@ -30,13 +30,7 @@ class UDPClientImpl : UDPClient {
                 e.printStackTrace()
             }
         }
-    }
-
-    override fun getIpAddress(): InetAddress? {
-        return serverAddress
-    }
-
-    override fun stop() {
         serverSocket?.close()
+        return serverAddress
     }
 }
