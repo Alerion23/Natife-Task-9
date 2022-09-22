@@ -8,6 +8,6 @@ interface TCPClient {
 
     fun sendMessage(message: String)
 
-    fun stop()
+    fun disconnect()
 
 }

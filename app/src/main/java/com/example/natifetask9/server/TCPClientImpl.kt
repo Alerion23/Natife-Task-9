@@ -3,7 +3,9 @@ package com.example.natifetask9.server
 import com.example.natifetask9.model.BaseDto
 import com.example.natifetask9.model.ConnectDto
 import com.example.natifetask9.model.ConnectedDto
+import com.example.natifetask9.model.PingDto
 import com.google.gson.Gson
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -18,37 +20,83 @@ class TCPClientImpl : TCPClient {
     private var socket: Socket? = null
     private var writer: PrintWriter? = null
     private var reader: BufferedReader? = null
+    private var pingPongJob: Job? = null
+    private var userId: String? = null
+    private val parentJob = SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.IO + parentJob)
     private val isConnected = MutableStateFlow(false)
+    private val gson = Gson()
 
+    @DelicateCoroutinesApi
     override fun startConnection(ip: InetAddress, port: Int, userName: String) {
-        var response: String?
-        socket = Socket(ip, port)
-        writer = PrintWriter(OutputStreamWriter(socket?.getOutputStream()))
-        reader = BufferedReader(InputStreamReader(socket?.getInputStream()))
-        isConnected.tryEmit(true)
-        val gson = Gson()
-        while (isConnected.value) {
-            try {
-                response = reader?.readLine()
-                if (response != null) {
-                    val responseModel = gson.fromJson(response, BaseDto::class.java)
-                    when (responseModel.action) {
-                        BaseDto.Action.CONNECTED -> {
-                            val connectedModel =
-                                Gson().fromJson(responseModel.payload, ConnectedDto::class.java)
-                            val userId = connectedModel.id
-                            val jsonString = gson.toJson(ConnectDto(userId, userName))
-                            val finalJsonString =
-                                gson.toJson(BaseDto(BaseDto.Action.CONNECT, jsonString))
-                            sendMessage(finalJsonString)
+        GlobalScope.launch(Dispatchers.IO) {
+            var response: String?
+            socket = Socket(ip, port)
+            writer = PrintWriter(OutputStreamWriter(socket?.getOutputStream()))
+            reader = BufferedReader(InputStreamReader(socket?.getInputStream()))
+            isConnected.tryEmit(true)
+            while (isConnected.value) {
+                try {
+                    response = reader?.readLine()
+                    if (response != null) {
+                        val responseModel = gson.fromJson(response, BaseDto::class.java)
+                        when (responseModel.action) {
+                            BaseDto.Action.CONNECTED -> {
+                                onConnectedResponse(responseModel, userName)
+                            }
+                            BaseDto.Action.USERS_RECEIVED -> {}
+                            BaseDto.Action.NEW_MESSAGE -> {}
+                            BaseDto.Action.PONG -> {
+                                onPongResponse()
+                            }
+                            else -> {}
                         }
-                        BaseDto.Action.USERS_RECEIVED -> {}
-                        BaseDto.Action.NEW_MESSAGE -> {}
-                        else -> {}
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun onPongResponse() {
+        pingPongJob?.cancel()
+    }
+
+    private fun onConnectedResponse(responseModel: BaseDto, userName: String) {
+        val connectedModel =
+            Gson().fromJson(
+                responseModel.payload,
+                ConnectedDto::class.java
+            )
+        userId = connectedModel.id
+        userId?.let {
+            val connectionString = gson.toJson(ConnectDto(it, userName))
+            val connectionJsonString =
+                gson.toJson(
+                    BaseDto(
+                        BaseDto.Action.CONNECT,
+                        connectionString
+                    )
+                )
+            sendMessage(connectionJsonString)
+            startPingingServer(it)
+        }
+
+    }
+
+    private fun startPingingServer(id: String) {
+        scope.launch {
+            while (isConnected.value) {
+                val pingString = gson.toJson(PingDto(id))
+                val pingJsonString =
+                    gson.toJson(BaseDto(BaseDto.Action.PING, pingString))
+                sendMessage(pingJsonString)
+                delay(8000)
+                pingPongJob = scope.launch {
+                    delay(10000)
+                    disconnect()
+                }
             }
         }
     }
@@ -58,10 +106,12 @@ class TCPClientImpl : TCPClient {
         writer?.flush()
     }
 
-    override fun stop() {
+
+    override fun disconnect() {
         socket?.close()
         writer?.close()
         reader?.close()
         isConnected.tryEmit(false)
+        parentJob.cancelChildren()
     }
 }
