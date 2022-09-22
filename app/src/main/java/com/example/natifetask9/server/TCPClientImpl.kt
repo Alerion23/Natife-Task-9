@@ -22,7 +22,8 @@ class TCPClientImpl : TCPClient {
     private var reader: BufferedReader? = null
     private var pingPongJob: Job? = null
     private var userId: String? = null
-    private val scope = CoroutineScope(Dispatchers.IO + Job())
+    private val parentJob = SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.IO + parentJob)
     private val isConnected = MutableStateFlow(false)
     private val gson = Gson()
 
@@ -111,6 +112,6 @@ class TCPClientImpl : TCPClient {
         writer?.close()
         reader?.close()
         isConnected.tryEmit(false)
-        scope.cancel()
+        parentJob.cancelChildren()
     }
 }
