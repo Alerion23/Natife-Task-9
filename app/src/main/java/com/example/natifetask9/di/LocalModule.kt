@@ -1,13 +1,19 @@
 package com.example.natifetask9.di
 
-import com.example.natifetask9.data.Prefs
-import org.koin.android.ext.koin.androidContext
+import android.content.Context
+import android.content.SharedPreferences
+import com.example.natifetask9.data.PrefsImpl
+import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 
 val localModule = module {
 
     single {
-        Prefs(context = androidContext())
+        PrefsImpl(prefs = get())
+    }
+
+    single {
+        androidApplication().getSharedPreferences(PrefsImpl.SHARED_FILE, Context.MODE_PRIVATE)
     }
 
 }

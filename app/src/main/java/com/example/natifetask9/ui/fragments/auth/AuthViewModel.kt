@@ -19,10 +19,8 @@ class AuthViewModel(
     private val _isConnected = MutableStateFlow(false)
     val isConnected = _isConnected.asStateFlow()
 
-    fun connectToServer(userName: String) {
-        _isLoading.tryEmit(true)
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.connectToServer(userName)
+    init {
+        viewModelScope.launch {
             repository.authState().collectLatest {
                 if (it) {
                     _isConnected.emit(it)
@@ -32,4 +30,10 @@ class AuthViewModel(
         }
     }
 
+    fun connectToServer(userName: String) {
+        _isLoading.value = true
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.connectToServer(userName)
+        }
+    }
 }

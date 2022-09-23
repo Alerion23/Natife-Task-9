@@ -34,7 +34,7 @@ class TCPClientImpl : TCPClient {
             socket = Socket(ip, port)
             writer = PrintWriter(OutputStreamWriter(socket?.getOutputStream()))
             reader = BufferedReader(InputStreamReader(socket?.getInputStream()))
-            isConnected.tryEmit(true)
+            isConnected.emit(true)
             while (isConnected.value) {
                 try {
                     response = reader?.readLine()
@@ -67,7 +67,7 @@ class TCPClientImpl : TCPClient {
 
     private fun onUsersReceivedResponse(responseModel: BaseDto) {
         val usersModel = gson.fromJson(responseModel.payload, UsersReceivedDto::class.java)
-        usersList.tryEmit(usersModel.users)
+        usersList.value = usersModel.users
     }
 
     private fun onPongResponse() {
@@ -91,7 +91,7 @@ class TCPClientImpl : TCPClient {
                     )
                 )
             sendMessage(connectionJsonString)
-            isAuthComplete.tryEmit(true)
+            isAuthComplete.value = true
             startPingingServer(it)
         }
     }
@@ -134,8 +134,8 @@ class TCPClientImpl : TCPClient {
         socket?.close()
         writer?.close()
         reader?.close()
-        isAuthComplete.tryEmit(false)
-        isConnected.tryEmit(false)
+        isAuthComplete.value = false
+        isConnected.value = false
         parentJob.cancelChildren()
     }
 }

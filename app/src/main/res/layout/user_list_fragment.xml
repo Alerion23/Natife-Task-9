@@ -7,10 +7,17 @@
     android:background="@android:color/white"
     tools:context=".ui.fragments.users.UserListFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/users_recycler"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_user_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/users_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ProgressBar
         android:id="@+id/user_list_progress_bar"

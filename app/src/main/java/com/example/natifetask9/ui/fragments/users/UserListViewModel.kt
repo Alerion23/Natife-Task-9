@@ -21,17 +21,17 @@ class UserListViewModel(
     val userList = _userList.asStateFlow()
 
     init {
+        viewModelScope.launch {
+            repository.userList().collectLatest {
+                _userList.emit(it)
+            }
+        }
         fetchUsers()
     }
 
-    private fun fetchUsers() {
-        _isLoading.tryEmit(true)
+    fun fetchUsers() {
         viewModelScope.launch(Dispatchers.Main) {
             repository.getUsers()
-            repository.userList().collectLatest {
-                _userList.emit(it)
-                _isLoading.emit(false)
-            }
         }
     }
 
