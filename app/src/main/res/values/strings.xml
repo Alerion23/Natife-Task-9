@@ -3,4 +3,6 @@
     <string name="username">Username</string>
     <string name="welcome_to_chat">WELCOME TO CHAT</string>
     <string name="type_your_name">Please type your user name</string>
+    <string name="auth_fragment">Auth Fragment</string>
+    <string name="user_list_fragment">User list fragment</string>
 </resources>

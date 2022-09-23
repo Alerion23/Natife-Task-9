@@ -5,4 +5,5 @@
     <dimen name="sing_in_title_size">25sp</dimen>
     <dimen name="input_text_padding">15dp</dimen>
     <dimen name="default_singin_textsize">17sp</dimen>
+    <dimen name="default_elevation">15dp</dimen>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.natifetask9.app
 
 import android.app.Application
+import com.example.natifetask9.di.localModule
 import com.example.natifetask9.di.networkModule
 import com.example.natifetask9.di.repositoryModule
 import com.example.natifetask9.di.viewModelModule
@@ -15,7 +16,7 @@ class MessengerApp : Application() {
         startKoin {
             androidLogger()
             androidContext(applicationContext)
-            modules(listOf(viewModelModule, repositoryModule, networkModule))
+            modules(listOf(viewModelModule, repositoryModule, networkModule, localModule))
         }
     }
 }
