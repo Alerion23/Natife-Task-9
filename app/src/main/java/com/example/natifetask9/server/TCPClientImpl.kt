@@ -1,11 +1,9 @@
 package com.example.natifetask9.server
 
-import com.example.natifetask9.model.BaseDto
-import com.example.natifetask9.model.ConnectDto
-import com.example.natifetask9.model.ConnectedDto
-import com.example.natifetask9.model.PingDto
+import com.example.natifetask9.model.*
 import com.google.gson.Gson
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -22,9 +20,11 @@ class TCPClientImpl : TCPClient {
     private var reader: BufferedReader? = null
     private var pingPongJob: Job? = null
     private var userId: String? = null
+    private var usersList = MutableStateFlow<List<User>>(emptyList())
     private val parentJob = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.IO + parentJob)
     private val isConnected = MutableStateFlow(false)
+    private val isAuthComplete = MutableStateFlow(false)
     private val gson = Gson()
 
     @DelicateCoroutinesApi
@@ -34,7 +34,7 @@ class TCPClientImpl : TCPClient {
             socket = Socket(ip, port)
             writer = PrintWriter(OutputStreamWriter(socket?.getOutputStream()))
             reader = BufferedReader(InputStreamReader(socket?.getInputStream()))
-            isConnected.tryEmit(true)
+            isConnected.emit(true)
             while (isConnected.value) {
                 try {
                     response = reader?.readLine()
@@ -44,7 +44,9 @@ class TCPClientImpl : TCPClient {
                             BaseDto.Action.CONNECTED -> {
                                 onConnectedResponse(responseModel, userName)
                             }
-                            BaseDto.Action.USERS_RECEIVED -> {}
+                            BaseDto.Action.USERS_RECEIVED -> {
+                                onUsersReceivedResponse(responseModel)
+                            }
                             BaseDto.Action.NEW_MESSAGE -> {}
                             BaseDto.Action.PONG -> {
                                 onPongResponse()
@@ -59,13 +61,22 @@ class TCPClientImpl : TCPClient {
         }
     }
 
+    override fun getAuthStatus(): Flow<Boolean> {
+        return isAuthComplete
+    }
+
+    private fun onUsersReceivedResponse(responseModel: BaseDto) {
+        val usersModel = gson.fromJson(responseModel.payload, UsersReceivedDto::class.java)
+        usersList.value = usersModel.users
+    }
+
     private fun onPongResponse() {
         pingPongJob?.cancel()
     }
 
     private fun onConnectedResponse(responseModel: BaseDto, userName: String) {
         val connectedModel =
-            Gson().fromJson(
+            gson.fromJson(
                 responseModel.payload,
                 ConnectedDto::class.java
             )
@@ -80,9 +91,9 @@ class TCPClientImpl : TCPClient {
                     )
                 )
             sendMessage(connectionJsonString)
+            isAuthComplete.value = true
             startPingingServer(it)
         }
-
     }
 
     private fun startPingingServer(id: String) {
@@ -106,12 +117,25 @@ class TCPClientImpl : TCPClient {
         writer?.flush()
     }
 
+    override fun sendGetUsers() {
+        userId?.let {
+            val userRequestString = gson.toJson(GetUsersDto(it))
+            val userRequestJsonString =
+                gson.toJson(BaseDto(BaseDto.Action.GET_USERS, userRequestString))
+            sendMessage(userRequestJsonString)
+        }
+    }
+
+    override fun getUsers(): Flow<List<User>> {
+        return usersList
+    }
 
     override fun disconnect() {
         socket?.close()
         writer?.close()
         reader?.close()
-        isConnected.tryEmit(false)
+        isAuthComplete.value = false
+        isConnected.value = false
         parentJob.cancelChildren()
     }
 }

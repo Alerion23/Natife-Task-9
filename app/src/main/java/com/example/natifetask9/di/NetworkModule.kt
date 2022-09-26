@@ -9,11 +9,11 @@ import org.koin.dsl.module
 
 val networkModule = module {
 
-    factory<UDPClient> {
+    single<UDPClient> {
         UDPClientImpl()
     }
 
-    factory<TCPClient> {
+    single<TCPClient> {
         TCPClientImpl()
     }
 

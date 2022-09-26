@@ -1,5 +1,7 @@
 package com.example.natifetask9.server
 
+import com.example.natifetask9.model.User
+import kotlinx.coroutines.flow.Flow
 import java.net.InetAddress
 
 interface TCPClient {
@@ -9,5 +11,11 @@ interface TCPClient {
     fun sendMessage(message: String)
 
     fun disconnect()
+
+    fun sendGetUsers()
+
+    fun getUsers() : Flow<List<User>>
+
+    fun getAuthStatus() : Flow<Boolean>
 
 }

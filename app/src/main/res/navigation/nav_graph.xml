@@ -8,9 +8,20 @@
     <fragment
         android:id="@+id/auth_fragment"
         android:name="com.example.natifetask9.ui.fragments.auth.AuthFragment"
-        android:label="Auth Fragment"
+        android:label="@string/auth_fragment"
         tools:layout="@layout/auth_fragment">
 
+        <action
+            android:id="@+id/go_to_user_list_fragment"
+            app:destination="@id/user_list_fragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/user_list_fragment"
+        android:name="com.example.natifetask9.ui.fragments.users.UserListFragment"
+        android:label="@string/user_list_fragment"
+        tools:layout="@layout/user_list_fragment">
     </fragment>
 
 </navigation>
