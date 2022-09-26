@@ -30,9 +30,11 @@ class UserListViewModel(
     }
 
     fun fetchUsers() {
+        _isLoading.value = true
         viewModelScope.launch(Dispatchers.Main) {
             repository.getUsers()
         }
+        _isLoading.value = false
     }
 
 }

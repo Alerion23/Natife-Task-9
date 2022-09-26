@@ -31,7 +31,6 @@ class UserListFragment : Fragment(R.layout.user_list_fragment) {
     private fun onSwipeRefresh() {
         binding?.swipeUserList?.setOnRefreshListener {
             viewModel.fetchUsers()
-            binding?.swipeUserList?.isRefreshing = false
         }
     }
 
@@ -47,6 +46,9 @@ class UserListFragment : Fragment(R.layout.user_list_fragment) {
             launch {
                 viewModel.isLoading.collectLatest {
                     binding?.userListProgressBar?.isVisible = it
+                    if (!it) {
+                        binding?.swipeUserList?.isRefreshing = it
+                    }
                 }
             }
             launch {
