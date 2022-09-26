@@ -2,7 +2,6 @@ package com.example.natifetask9.ui.fragments.users
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -31,7 +30,6 @@ class UserListFragment : Fragment(R.layout.user_list_fragment) {
 
     private fun onSwipeRefresh() {
         binding?.swipeUserList?.setOnRefreshListener {
-            userAdapter
             viewModel.fetchUsers()
             binding?.swipeUserList?.isRefreshing = false
         }
@@ -53,11 +51,7 @@ class UserListFragment : Fragment(R.layout.user_list_fragment) {
             }
             launch {
                 viewModel.userList.collectLatest {
-                    if (it.isNotEmpty()) {
-                        userAdapter.submitList(it)
-                    } else {
-                        userAdapter.submitList(null)
-                    }
+                    userAdapter.submitList(it)
                 }
             }
         }
