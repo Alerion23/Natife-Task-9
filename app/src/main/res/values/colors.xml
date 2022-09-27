@@ -8,4 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="disabled_btn">#9EB880</color>
+    <color name="other_message_color">#eef1f6</color>
 </resources>

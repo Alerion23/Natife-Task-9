@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.natifetask9.R
 import com.example.natifetask9.databinding.UserListFragmentBinding
@@ -17,7 +18,10 @@ class UserListFragment : Fragment(R.layout.user_list_fragment) {
     private var binding: UserListFragmentBinding? = null
     private val viewModel by viewModel<UserListViewModel>()
     private val userAdapter: UserListAdapter by lazy {
-        UserListAdapter(onItemClicked = {})
+        UserListAdapter(onItemClicked = { id ->
+            val direction = UserListFragmentDirections.goToChatFragment(id)
+            findNavController().navigate(direction)
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

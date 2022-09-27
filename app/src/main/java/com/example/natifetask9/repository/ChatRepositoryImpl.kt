@@ -1,5 +1,6 @@
 package com.example.natifetask9.repository
 
+import com.example.natifetask9.model.Message
 import com.example.natifetask9.model.User
 import com.example.natifetask9.server.TCPClient
 import kotlinx.coroutines.Dispatchers
@@ -18,5 +19,15 @@ class ChatRepositoryImpl(
 
     override fun userList(): Flow<List<User>> {
         return tcpClient.getUsers()
+    }
+
+    override suspend fun sendMessageToChat(text: String, receiverId: String) {
+        withContext(Dispatchers.IO) {
+            tcpClient.sendMessageForChat(text, receiverId)
+        }
+    }
+
+    override fun receivedMessage(): Flow<List<Message>> {
+        return tcpClient.getMessageForChat()
     }
 }
