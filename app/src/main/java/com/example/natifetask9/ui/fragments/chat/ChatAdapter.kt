@@ -79,11 +79,12 @@ class ChatAdapter(
     class MessageDiffCallBack : DiffUtil.ItemCallback<Message>() {
 
         override fun areItemsTheSame(oldItem: Message, newItem: Message): Boolean {
-            return oldItem.otherUserId == newItem.otherUserId
+            return oldItem.hashCode() == newItem.hashCode()
         }
 
         override fun areContentsTheSame(oldItem: Message, newItem: Message): Boolean {
-            return oldItem.message == newItem.message
+            return oldItem.message == newItem.message &&
+                    oldItem.otherUserId == newItem.otherUserId
         }
 
     }

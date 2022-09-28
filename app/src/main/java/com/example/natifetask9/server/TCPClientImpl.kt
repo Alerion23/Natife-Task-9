@@ -68,8 +68,7 @@ class TCPClientImpl : TCPClient {
 
     private fun onNewMessageResponse(responseModel: BaseDto) {
         val messageModel = gson.fromJson(responseModel.payload, MessageDto::class.java)
-        val otherUserId = messageModel.from.id
-        val message = messageModel.toMessage(Message.Sender.OTHER_USER, otherUserId)
+        val message = messageModel.toMessage(Message.Sender.OTHER_USER)
         chatMessages.value = message
     }
 

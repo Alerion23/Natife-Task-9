@@ -8,7 +8,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.natifetask9.R
 import com.example.natifetask9.databinding.ChatFragmentBinding
-import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -33,7 +32,7 @@ class ChatFragment : Fragment(R.layout.chat_fragment) {
 
     private fun observeViewModel() {
         lifecycleScope.launchWhenStarted {
-            viewModel.messagesList.collectLatest {
+            viewModel.messagesList.collect {
                 chatAdapter.submitList(it)
             }
         }
@@ -45,7 +44,6 @@ class ChatFragment : Fragment(R.layout.chat_fragment) {
             linearLayoutManager.stackFromEnd = true
             recyclerChat.layoutManager = linearLayoutManager
             recyclerChat.adapter = chatAdapter
-            recyclerChat.itemAnimator = null
         }
     }
 

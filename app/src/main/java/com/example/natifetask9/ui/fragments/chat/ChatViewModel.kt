@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.natifetask9.model.Message
 import com.example.natifetask9.repository.ChatRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -15,22 +15,22 @@ class ChatViewModel(
     private val receiverId: String
 ) : ViewModel() {
 
-    private val _messagesList = MutableStateFlow<List<Message>>(emptyList())
-    val messagesList = _messagesList.asStateFlow()
+    private val _messagesList = MutableSharedFlow<List<Message>>(
+        replay = 0
+    )
+    val messagesList = _messagesList.asSharedFlow()
+
+    private var currentList = emptyList<Message>()
 
     init {
-        startFilter()
         viewModelScope.launch {
-            repository.messages().collectLatest {
-                _messagesList.value = it
+            repository.messages(receiverId).collectLatest {
+                val newList = currentList + it
+                currentList = newList
+                _messagesList.emit(newList)
             }
         }
-    }
-
-    private fun startFilter() {
-        viewModelScope.launch(Dispatchers.Main) {
-            repository.startFilterMessages(receiverId)
-        }
+        currentList = emptyList()
     }
 
     fun sendMessage(text: String) {
