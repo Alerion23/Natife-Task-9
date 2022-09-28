@@ -34,7 +34,7 @@ class ChatFragment : Fragment(R.layout.chat_fragment) {
     private fun observeViewModel() {
         lifecycleScope.launchWhenStarted {
             viewModel.messagesList.collectLatest {
-                chatAdapter.setMessageList(it)
+                chatAdapter.submitList(it)
             }
         }
     }
@@ -45,6 +45,7 @@ class ChatFragment : Fragment(R.layout.chat_fragment) {
             linearLayoutManager.stackFromEnd = true
             recyclerChat.layoutManager = linearLayoutManager
             recyclerChat.adapter = chatAdapter
+            recyclerChat.itemAnimator = null
         }
     }
 

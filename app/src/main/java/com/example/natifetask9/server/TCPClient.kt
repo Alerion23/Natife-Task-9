@@ -19,6 +19,6 @@ interface TCPClient {
 
     fun sendMessageForChat(text: String, receiverId: String)
 
-    fun getMessageForChat(): Flow<List<Message>>
+    fun getMessageForChat(): Flow<Message>
 
 }

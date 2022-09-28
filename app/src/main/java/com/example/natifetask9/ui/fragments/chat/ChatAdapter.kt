@@ -2,6 +2,8 @@ package com.example.natifetask9.ui.fragments.chat
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.natifetask9.databinding.EmptyViewHolderBinding
 import com.example.natifetask9.databinding.MyMessageBinding
@@ -10,9 +12,7 @@ import com.example.natifetask9.model.Message
 
 class ChatAdapter(
     private val otherUserId: String
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private var list: List<Message> = emptyList()
+) : ListAdapter<Message, RecyclerView.ViewHolder>(MessageDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -41,7 +41,7 @@ class ChatAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val message = list[position]
+        val message = getItem(position)
         when (message.user) {
             Message.Sender.ME -> {
                 if (message.otherUserId == otherUserId) {
@@ -57,7 +57,7 @@ class ChatAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        val message = list[position]
+        val message = getItem(position)
         return when (message.user) {
             Message.Sender.ME -> {
                 if (message.otherUserId == otherUserId) {
@@ -76,14 +76,16 @@ class ChatAdapter(
         }
     }
 
+    class MessageDiffCallBack : DiffUtil.ItemCallback<Message>() {
 
-    override fun getItemCount(): Int {
-        return list.size
-    }
+        override fun areItemsTheSame(oldItem: Message, newItem: Message): Boolean {
+            return oldItem.otherUserId == newItem.otherUserId
+        }
 
-    fun setMessageList(messageList: List<Message>) {
-        list = messageList
-        notifyDataSetChanged()
+        override fun areContentsTheSame(oldItem: Message, newItem: Message): Boolean {
+            return oldItem.message == newItem.message
+        }
+
     }
 
     class SentMessageHolder(

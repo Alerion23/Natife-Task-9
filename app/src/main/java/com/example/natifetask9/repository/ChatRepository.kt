@@ -12,6 +12,10 @@ interface ChatRepository {
 
     suspend fun sendMessageToChat(text: String, receiverId: String)
 
-    fun receivedMessage(): Flow<List<Message>>
+    suspend fun startListenMessages()
+
+    fun messages(): Flow<List<Message>>
+
+    suspend fun startFilterMessages(id: String)
 
 }

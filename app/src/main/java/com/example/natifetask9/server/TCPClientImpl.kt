@@ -20,7 +20,9 @@ class TCPClientImpl : TCPClient {
     private var reader: BufferedReader? = null
     private var pingPongJob: Job? = null
     private var userId: String? = null
-    private var chatMessages = MutableStateFlow<List<Message>>(emptyList())
+    private var chatMessages = MutableStateFlow(
+        Message("-1", Message.Sender.ME, "")
+    )
     private var usersList = MutableStateFlow<List<User>>(emptyList())
     private val parentJob = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.IO + parentJob)
@@ -68,8 +70,7 @@ class TCPClientImpl : TCPClient {
         val messageModel = gson.fromJson(responseModel.payload, MessageDto::class.java)
         val otherUserId = messageModel.from.id
         val message = messageModel.toMessage(Message.Sender.OTHER_USER, otherUserId)
-        val currentList = chatMessages.value
-        chatMessages.value = currentList + message
+        chatMessages.value = message
     }
 
     override fun getAuthStatus(): Flow<Boolean> {
@@ -131,15 +132,14 @@ class TCPClientImpl : TCPClient {
     override fun sendMessageForChat(text: String, receiverId: String) {
         userId?.let {
             val message = Message(receiverId, Message.Sender.ME, text)
-            val currentList = chatMessages.value
-            chatMessages.value = currentList + message
+            chatMessages.value = message
             val messageString = gson.toJson(SendMessageDto(it, receiverId, text))
             val messageJsonString = gson.toJson(BaseDto(BaseDto.Action.SEND_MESSAGE, messageString))
             send(messageJsonString)
         }
     }
 
-    override fun getMessageForChat(): Flow<List<Message>> {
+    override fun getMessageForChat(): Flow<Message> {
         return chatMessages
     }
 

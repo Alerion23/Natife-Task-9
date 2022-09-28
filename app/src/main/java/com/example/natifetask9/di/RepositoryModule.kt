@@ -12,7 +12,7 @@ val repositoryModule = module {
         AuthRepositoryImpl(udpClient = get(), tcpClient = get())
     }
 
-    factory<ChatRepository> {
+    single<ChatRepository> {
         ChatRepositoryImpl(tcpClient = get())
     }
 

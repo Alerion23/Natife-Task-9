@@ -26,7 +26,14 @@ class UserListViewModel(
                 _userList.emit(it)
             }
         }
+        startListenMessages()
         fetchUsers()
+    }
+
+    private fun startListenMessages() {
+        viewModelScope.launch(Dispatchers.Main) {
+            repository.startListenMessages()
+        }
     }
 
     fun fetchUsers() {

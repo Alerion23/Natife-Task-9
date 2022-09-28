@@ -19,12 +19,17 @@ class ChatViewModel(
     val messagesList = _messagesList.asStateFlow()
 
     init {
+        startFilter()
         viewModelScope.launch {
-            repository.receivedMessage().collectLatest {
-                repository.receivedMessage().collectLatest {
-                    _messagesList.value = it
-                }
+            repository.messages().collectLatest {
+                _messagesList.value = it
             }
+        }
+    }
+
+    private fun startFilter() {
+        viewModelScope.launch(Dispatchers.Main) {
+            repository.startFilterMessages(receiverId)
         }
     }
 
