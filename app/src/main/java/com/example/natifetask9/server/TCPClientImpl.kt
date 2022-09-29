@@ -1,6 +1,7 @@
 package com.example.natifetask9.server
 
 import com.example.natifetask9.model.*
+import com.example.natifetask9.utils.toMessage
 import com.google.gson.Gson
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
@@ -9,7 +10,6 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.io.PrintWriter
-import java.lang.Exception
 import java.net.InetAddress
 import java.net.Socket
 
@@ -20,6 +20,9 @@ class TCPClientImpl : TCPClient {
     private var reader: BufferedReader? = null
     private var pingPongJob: Job? = null
     private var userId: String? = null
+    private var chatMessages = MutableStateFlow(
+        Message("-1", Message.Sender.ME, "")
+    )
     private var usersList = MutableStateFlow<List<User>>(emptyList())
     private val parentJob = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.IO + parentJob)
@@ -47,7 +50,9 @@ class TCPClientImpl : TCPClient {
                             BaseDto.Action.USERS_RECEIVED -> {
                                 onUsersReceivedResponse(responseModel)
                             }
-                            BaseDto.Action.NEW_MESSAGE -> {}
+                            BaseDto.Action.NEW_MESSAGE -> {
+                                onNewMessageResponse(responseModel)
+                            }
                             BaseDto.Action.PONG -> {
                                 onPongResponse()
                             }
@@ -59,6 +64,12 @@ class TCPClientImpl : TCPClient {
                 }
             }
         }
+    }
+
+    private fun onNewMessageResponse(responseModel: BaseDto) {
+        val messageModel = gson.fromJson(responseModel.payload, MessageDto::class.java)
+        val message = messageModel.toMessage(Message.Sender.OTHER_USER)
+        chatMessages.value = message
     }
 
     override fun getAuthStatus(): Flow<Boolean> {
@@ -90,7 +101,7 @@ class TCPClientImpl : TCPClient {
                         connectionString
                     )
                 )
-            sendMessage(connectionJsonString)
+            send(connectionJsonString)
             isAuthComplete.value = true
             startPingingServer(it)
         }
@@ -102,7 +113,7 @@ class TCPClientImpl : TCPClient {
                 val pingString = gson.toJson(PingDto(id))
                 val pingJsonString =
                     gson.toJson(BaseDto(BaseDto.Action.PING, pingString))
-                sendMessage(pingJsonString)
+                send(pingJsonString)
                 delay(8000)
                 pingPongJob = scope.launch {
                     delay(10000)
@@ -112,9 +123,23 @@ class TCPClientImpl : TCPClient {
         }
     }
 
-    override fun sendMessage(message: String) {
+    private fun send(message: String) {
         writer?.println(message)
         writer?.flush()
+    }
+
+    override fun sendMessageForChat(text: String, receiverId: String) {
+        userId?.let {
+            val message = Message(receiverId, Message.Sender.ME, text)
+            chatMessages.value = message
+            val messageString = gson.toJson(SendMessageDto(it, receiverId, text))
+            val messageJsonString = gson.toJson(BaseDto(BaseDto.Action.SEND_MESSAGE, messageString))
+            send(messageJsonString)
+        }
+    }
+
+    override fun getMessageForChat(): Flow<Message> {
+        return chatMessages
     }
 
     override fun sendGetUsers() {
@@ -122,7 +147,7 @@ class TCPClientImpl : TCPClient {
             val userRequestString = gson.toJson(GetUsersDto(it))
             val userRequestJsonString =
                 gson.toJson(BaseDto(BaseDto.Action.GET_USERS, userRequestString))
-            sendMessage(userRequestJsonString)
+            send(userRequestJsonString)
         }
     }
 
