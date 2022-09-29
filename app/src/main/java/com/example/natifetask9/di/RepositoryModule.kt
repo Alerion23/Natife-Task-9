@@ -8,8 +8,8 @@ import org.koin.dsl.module
 
 val repositoryModule = module {
 
-    factory<AuthRepository> {
-        AuthRepositoryImpl(udpClient = get(), tcpClient = get())
+    single<AuthRepository> {
+        AuthRepositoryImpl(udpClient = get(), tcpClient = get(), prefs = get())
     }
 
     single<ChatRepository> {
