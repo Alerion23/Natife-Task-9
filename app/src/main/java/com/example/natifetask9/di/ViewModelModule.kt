@@ -1,5 +1,6 @@
 package com.example.natifetask9.di
 
+import com.example.natifetask9.ui.MessengerActivityViewModel
 import com.example.natifetask9.ui.fragments.auth.AuthViewModel
 import com.example.natifetask9.ui.fragments.chat.ChatViewModel
 import com.example.natifetask9.ui.fragments.users.UserListViewModel
@@ -18,6 +19,10 @@ val viewModelModule = module {
 
     viewModel {
         ChatViewModel(repository = get(), receiverId = get())
+    }
+
+    viewModel {
+        MessengerActivityViewModel(repository = get())
     }
 
 }

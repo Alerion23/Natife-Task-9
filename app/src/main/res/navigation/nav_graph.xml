@@ -2,8 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
-    app:startDestination="@id/auth_fragment">
+    android:id="@+id/nav_graph">
 
     <fragment
         android:id="@+id/auth_fragment"
@@ -13,7 +12,9 @@
 
         <action
             android:id="@+id/go_to_user_list_fragment"
-            app:destination="@id/user_list_fragment" />
+            app:destination="@id/user_list_fragment"
+            app:popUpTo="@id/auth_fragment"
+            app:popUpToInclusive="true"/>
 
     </fragment>
 

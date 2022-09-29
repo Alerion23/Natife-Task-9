@@ -8,4 +8,6 @@ interface AuthRepository {
 
     fun authState() : Flow<Boolean>
 
+    fun getUserName() : String?
+
 }

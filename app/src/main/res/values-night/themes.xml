@@ -13,5 +13,7 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="buttonStyle">@android:color/holo_green_dark</item>
+        <item name="windowSplashScreenBackground">@android:color/holo_green_light</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
     </style>
 </resources>
