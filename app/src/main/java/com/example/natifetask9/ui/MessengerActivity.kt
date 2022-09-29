@@ -1,8 +1,6 @@
 package com.example.natifetask9.ui
 
 import android.os.Bundle
-import android.view.View
-import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
@@ -20,28 +18,20 @@ class MessengerActivity : AppCompatActivity() {
     private var userHasLogged = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         binding = ActivityMessengerBinding.inflate(layoutInflater).also {
             setContentView(it.root)
         }
         observeViewModel()
-        setupSplashScreen()
-    }
-
-    private fun setupSplashScreen() {
-        val content: View = findViewById(android.R.id.content)
-        content.viewTreeObserver.addOnPreDrawListener(
-            object : ViewTreeObserver.OnPreDrawListener {
-                override fun onPreDraw(): Boolean {
-                    return if (contentHasLoaded) {
-                        setStartDestination()
-                        content.viewTreeObserver.removeOnPreDrawListener(this)
-                        true
-                    } else false
-                }
+        splashScreen.setKeepOnScreenCondition {
+            if (contentHasLoaded) {
+                setStartDestination()
+                false
+            } else {
+                true
             }
-        )
+        }
     }
 
     private fun observeViewModel() {
