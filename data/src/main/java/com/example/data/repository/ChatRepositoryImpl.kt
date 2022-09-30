@@ -2,13 +2,14 @@ package com.example.data.repository
 
 import com.example.domain.model.Message
 import com.example.domain.model.User
+import com.example.domain.server.TCPClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.withContext
 
-class ChatRepositoryImpl(
-    private val tcpClient: com.example.domain.server.TCPClient,
+internal class ChatRepositoryImpl(
+    private val tcpClient: TCPClient,
 ) : com.example.domain.repository.ChatRepository {
 
     override suspend fun getUsers() {

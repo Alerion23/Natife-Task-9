@@ -3,7 +3,7 @@ package com.example.data.server
 import java.io.IOException
 import java.net.*
 
-class UDPClientImpl : com.example.domain.server.UDPClient {
+internal class UDPClientImpl : com.example.domain.server.UDPClient {
 
     private var serverSocket: DatagramSocket? = null
     private var serverAddress: InetAddress? = null

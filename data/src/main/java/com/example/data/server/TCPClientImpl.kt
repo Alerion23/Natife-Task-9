@@ -13,7 +13,7 @@ import java.io.PrintWriter
 import java.net.InetAddress
 import java.net.Socket
 
-class TCPClientImpl : com.example.domain.server.TCPClient {
+internal class TCPClientImpl : com.example.domain.server.TCPClient {
 
     private var socket: Socket? = null
     private var writer: PrintWriter? = null

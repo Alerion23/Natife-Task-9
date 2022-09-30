@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.example.domain.repository.datasource.Prefs
 
-class PrefsImpl(
+internal class PrefsImpl(
     private val prefs: SharedPreferences
 ) : Prefs {
 

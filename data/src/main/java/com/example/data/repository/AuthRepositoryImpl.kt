@@ -2,13 +2,15 @@ package com.example.data.repository
 
 import com.example.data.utils.Constants
 import com.example.domain.repository.datasource.Prefs
+import com.example.domain.server.TCPClient
+import com.example.domain.server.UDPClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
-class AuthRepositoryImpl(
-    private val udpClient: com.example.domain.server.UDPClient,
-    private val tcpClient: com.example.domain.server.TCPClient,
+internal class AuthRepositoryImpl(
+    private val udpClient: UDPClient,
+    private val tcpClient: TCPClient,
     private val prefs: Prefs
 ) : com.example.domain.repository.AuthRepository {
 
