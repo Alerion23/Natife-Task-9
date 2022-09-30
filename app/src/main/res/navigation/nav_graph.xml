@@ -14,7 +14,7 @@
             android:id="@+id/go_to_user_list_fragment"
             app:destination="@id/user_list_fragment"
             app:popUpTo="@id/auth_fragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
 
     </fragment>
 
@@ -27,6 +27,12 @@
         <action
             android:id="@+id/go_to_chat_fragment"
             app:destination="@id/chat_fragment" />
+
+        <action
+            android:id="@+id/go_to_auth_fragment"
+            app:destination="@id/auth_fragment"
+            app:popUpTo="@id/user_list_fragment"
+            app:popUpToInclusive="true" />
 
     </fragment>
 

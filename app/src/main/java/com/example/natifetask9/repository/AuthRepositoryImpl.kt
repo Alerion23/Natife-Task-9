@@ -4,7 +4,9 @@ import com.example.natifetask9.data.Prefs
 import com.example.natifetask9.server.TCPClient
 import com.example.natifetask9.server.UDPClient
 import com.example.natifetask9.utils.Constants
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
 class AuthRepositoryImpl(
     private val udpClient: UDPClient,
@@ -25,4 +27,12 @@ class AuthRepositoryImpl(
     }
 
     override fun getUserName(): String? = prefs.getUserName()
+
+    override suspend fun logOut() {
+        withContext(Dispatchers.IO) {
+            prefs.setUserName("")
+            tcpClient.sendDisconnect()
+            tcpClient.disconnect()
+        }
+    }
 }

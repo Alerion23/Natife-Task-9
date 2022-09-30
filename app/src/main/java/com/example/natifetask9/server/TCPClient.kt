@@ -21,4 +21,6 @@ interface TCPClient {
 
     fun getMessageForChat(): Flow<Message>
 
+    fun sendDisconnect()
+
 }

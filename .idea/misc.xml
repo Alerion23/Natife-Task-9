@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/Users/lars2/AndroidStudioProjects/NatifeTask9/app/src/main/res/drawable/button_background.xml" value="0.103" />
         <entry key="..\:/Users/lars2/AndroidStudioProjects/NatifeTask9/app/src/main/res/drawable/form_background.xml" value="0.103" />
+        <entry key="..\:/Users/lars2/AndroidStudioProjects/NatifeTask9/app/src/main/res/drawable/logout_button_shape.xml" value="0.103" />
         <entry key="..\:/Users/lars2/AndroidStudioProjects/NatifeTask9/app/src/main/res/layout/activity_auth.xml" value="0.2" />
         <entry key="..\:/Users/lars2/AndroidStudioProjects/NatifeTask9/app/src/main/res/layout/activity_main.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/lars2/AndroidStudioProjects/NatifeTask9/app/src/main/res/layout/activity_messenger.xml" value="0.17074275362318841" />
@@ -14,7 +15,7 @@
         <entry key="..\:/Users/lars2/AndroidStudioProjects/NatifeTask9/app/src/main/res/layout/my_message.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/lars2/AndroidStudioProjects/NatifeTask9/app/src/main/res/layout/other_message.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/lars2/AndroidStudioProjects/NatifeTask9/app/src/main/res/layout/user_list.xml" value="0.2" />
-        <entry key="..\:/Users/lars2/AndroidStudioProjects/NatifeTask9/app/src/main/res/layout/user_list_fragment.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/lars2/AndroidStudioProjects/NatifeTask9/app/src/main/res/layout/user_list_fragment.xml" value="0.176" />
       </map>
     </option>
   </component>

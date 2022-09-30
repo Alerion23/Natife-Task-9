@@ -6,8 +6,10 @@ interface AuthRepository {
 
     suspend fun connectToServer(userName: String)
 
-    fun authState() : Flow<Boolean>
+    fun authState(): Flow<Boolean>
 
-    fun getUserName() : String?
+    fun getUserName(): String?
+
+    suspend fun logOut()
 
 }
