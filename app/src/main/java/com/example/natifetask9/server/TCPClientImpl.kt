@@ -128,6 +128,15 @@ class TCPClientImpl : TCPClient {
         writer?.flush()
     }
 
+    override fun sendDisconnect() {
+        userId?.let {
+            val disconnectString = gson.toJson(DisconnectDto(it, DISCONNECT_CODE))
+            val disconnectJsonString =
+                gson.toJson(BaseDto(BaseDto.Action.DISCONNECT, disconnectString))
+            send(disconnectJsonString)
+        }
+    }
+
     override fun sendMessageForChat(text: String, receiverId: String) {
         userId?.let {
             val message = Message(receiverId, Message.Sender.ME, text)
@@ -162,5 +171,9 @@ class TCPClientImpl : TCPClient {
         isAuthComplete.value = false
         isConnected.value = false
         parentJob.cancelChildren()
+    }
+
+    companion object {
+        private const val DISCONNECT_CODE = 0
     }
 }

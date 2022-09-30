@@ -14,7 +14,7 @@ val viewModelModule = module {
     }
 
     viewModel {
-        UserListViewModel(repository = get())
+        UserListViewModel(chatRepository = get(), authRepository = get())
     }
 
     viewModel {

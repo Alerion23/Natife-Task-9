@@ -30,6 +30,14 @@ class UserListFragment : Fragment(R.layout.user_list_fragment) {
         setupView()
         observeViewModel()
         onSwipeRefresh()
+        onLogOutClick()
+    }
+
+    private fun onLogOutClick() {
+        binding?.logout?.setOnClickListener {
+            viewModel.logOutUser()
+            findNavController().navigate(R.id.go_to_auth_fragment)
+        }
     }
 
     private fun onSwipeRefresh() {
@@ -62,7 +70,6 @@ class UserListFragment : Fragment(R.layout.user_list_fragment) {
             }
         }
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

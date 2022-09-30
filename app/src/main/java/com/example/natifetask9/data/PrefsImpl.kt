@@ -1,6 +1,5 @@
 package com.example.natifetask9.data
 
-import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 
