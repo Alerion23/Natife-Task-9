@@ -2,9 +2,9 @@ package com.example.natifetask9.ui.fragments.users
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.natifetask9.model.User
-import com.example.natifetask9.repository.AuthRepository
-import com.example.natifetask9.repository.ChatRepository
+import com.example.domain.model.User
+import com.example.domain.repository.AuthRepository
+import com.example.domain.repository.ChatRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

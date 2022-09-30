@@ -2,8 +2,8 @@ package com.example.natifetask9.ui.fragments.chat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.natifetask9.model.Message
-import com.example.natifetask9.repository.ChatRepository
+import com.example.domain.model.Message
+import com.example.domain.repository.ChatRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

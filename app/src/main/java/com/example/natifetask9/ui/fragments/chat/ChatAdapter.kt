@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.domain.model.Message
 import com.example.natifetask9.databinding.EmptyViewHolderBinding
 import com.example.natifetask9.databinding.MyMessageBinding
 import com.example.natifetask9.databinding.OtherMessageBinding
-import com.example.natifetask9.model.Message
 
 class ChatAdapter(
     private val otherUserId: String
